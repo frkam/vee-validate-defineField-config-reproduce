@@ -4,7 +4,7 @@ import { ErrorMessage, Field, Form, configure, useForm } from "vee-validate";
 import { z } from "zod";
 
 const schema = toTypedSchema(
-  z.object({ name: z.string().length(2), surname: z.string().length(3) })
+  z.object({ name: z.string().min(10), surname: z.string().min(10) })
 );
 
 const { defineField, handleSubmit, errors } = useForm({
@@ -12,18 +12,11 @@ const { defineField, handleSubmit, errors } = useForm({
 });
 
 configure({
+  validateOnInput: true,
   validateOnModelUpdate: false,
-  validateOnChange: false,
-  validateOnInput: false,
-  validateOnBlur: false,
 });
 
-const [name, nameAttrs] = defineField("name", {
-  validateOnModelUpdate: false,
-  validateOnBlur: false,
-  validateOnChange: false,
-  validateOnInput: false,
-});
+const [name, nameAttrs] = defineField("name");
 
 const handleSubmitClicked = handleSubmit((values) => {
   console.log(values);
