@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
-import { ErrorMessage, Field, Form, configure, useForm } from "vee-validate";
+import { configure, useForm } from "vee-validate";
 import { z } from "zod";
 
 const schema = toTypedSchema(
   z.object({ name: z.string().min(10), surname: z.string().min(10) })
 );
 
-const { defineField, handleSubmit, errors } = useForm({
+const { defineField, handleSubmit, errors, defineInputBinds } = useForm({
   validationSchema: schema,
 });
 
 configure({
-  validateOnInput: true,
+  validateOnChange: false,
   validateOnModelUpdate: false,
 });
 
 const [name, nameAttrs] = defineField("name");
+const surname = defineInputBinds("surname");
 
 const handleSubmitClicked = handleSubmit((values) => {
   console.log(values);
@@ -31,9 +32,9 @@ const handleSubmitClicked = handleSubmit((values) => {
       <span v-if="errors.name">{{ errors.name }}</span>
     </div>
     <div>
-      <Field name="surname" type="string" placeholder="surname" />
+      <input v-bind="surname" placeholder="surname" />
 
-      <ErrorMessage name="surname" />
+      <span v-if="errors.surname">{{ errors.surname }}</span>
     </div>
 
     <button type="submit">submit</button>
